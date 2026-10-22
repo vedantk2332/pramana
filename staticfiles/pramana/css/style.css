@@ -1,0 +1,1466 @@
+/**
+ * Pramana - Complete Figma Design System
+ * Aesthetic: Warm Ivory / Editorial Craft / Solar Amber Accents / Dark Ink Code Panels
+ * Typography: Newsreader (Editorial Serif) + Inter (Modern Sans) + JetBrains Mono (Code)
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&display=swap');
+
+:root {
+  /* Surface Colors */
+  --bg-page: #FAF8F5;
+  --bg-page-subtle: #F4F1EA;
+  --bg-card: #FFFFFF;
+  --bg-card-subtle: #FDFCFA;
+  --bg-card-hover: #F8F5EE;
+  
+  /* Dark Code Panels (High-Contrast Editorial) */
+  --bg-dark-panel: #16171B;
+  --bg-dark-surface: #1E2026;
+  --bg-dark-code: #121316;
+  --bg-dark-highlight: #282A33;
+  
+  /* Ink & Typography */
+  --ink-primary: #181715;
+  --ink-secondary: #4A4742;
+  --ink-muted: #78746D;
+  --ink-subtle: #A39E95;
+  --ink-light: #F4F2EE;
+  --ink-light-muted: #9E9EA8;
+  
+  /* Solar Amber / Gold Accents */
+  --gold-primary: #F59E0B;
+  --gold-hover: #D97706;
+  --gold-active: #B45309;
+  --gold-light: #FEF3C7;
+  --gold-surface: #FFFDF7;
+  --gold-border: #FCD34D;
+  --gold-glow: rgba(245, 158, 11, 0.25);
+  
+  /* Secondary Mode Colors */
+  --blue-primary: #3B82F6;
+  --blue-light: #EFF6FF;
+  --blue-border: #BFDBFE;
+  
+  --purple-primary: #8B5CF6;
+  --purple-light: #F5F3FF;
+  --purple-border: #DDD6FE;
+  
+  --green-primary: #10B981;
+  --green-light: #ECFDF5;
+  --green-border: #A7F3D0;
+  
+  --rose-primary: #F43F5E;
+  --rose-light: #FFF1F2;
+  --rose-border: #FECDD3;
+
+  /* Borders & Dividers */
+  --border-light: #E8E4DC;
+  --border-strong: #D5D0C6;
+  --border-focus: #F59E0B;
+  --border-dark: #2E3038;
+  
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(24, 23, 21, 0.04);
+  --shadow-sm: 0 2px 6px rgba(24, 23, 21, 0.05);
+  --shadow-md: 0 6px 18px rgba(24, 23, 21, 0.06);
+  --shadow-lg: 0 16px 36px rgba(24, 23, 21, 0.08);
+  --shadow-floating: 0 24px 50px -12px rgba(24, 23, 21, 0.16);
+  --shadow-gold: 0 8px 24px -4px rgba(245, 158, 11, 0.35);
+
+  /* Typography Fonts */
+  --font-display: 'Newsreader', 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
+  --radius-pill: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset & Core Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-page);
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Typography Utilities */
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink-primary);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+a {
+  color: var(--ink-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--gold-hover);
+}
+
+/* ==========================================================================
+   NAVIGATION BAR (FIGMA WARM HEADER)
+   ========================================================================== */
+.navbar-pramana {
+  background: rgba(250, 248, 245, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0.75rem 0;
+  transition: all var(--transition-normal);
+}
+
+.brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--ink-primary);
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+  transition: transform var(--transition-fast);
+}
+
+.brand-badge:hover .brand-icon {
+  transform: rotate(5deg) scale(1.05);
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink-primary);
+}
+
+.brand-tagline {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+/* Nav Pills matching Figma */
+.nav-pills-figma {
+  display: flex;
+  background: var(--bg-page-subtle);
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-light);
+  gap: 4px;
+}
+
+.nav-pills-figma .nav-link {
+  color: var(--ink-secondary);
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+}
+
+.nav-pills-figma .nav-link:hover {
+  color: var(--ink-primary);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.nav-pills-figma .nav-link.active {
+  background: #FFFFFF;
+  color: var(--ink-primary);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(24, 23, 21, 0.08);
+}
+
+/* User Badges */
+.xp-badge {
+  background: var(--gold-light);
+  color: #92400E;
+  border: 1px solid var(--gold-border);
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: var(--shadow-xs);
+}
+
+.level-badge {
+  background: #FFFFFF;
+  color: var(--ink-secondary);
+  border: 1px solid var(--border-light);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+}
+
+/* ==========================================================================
+   BUTTONS (FIGMA AMBER PILL & EDITORIAL VARIANTS)
+   ========================================================================== */
+.btn-figma-primary,
+.btn-pramana {
+  background: linear-gradient(180deg, #FBBF24 0%, #F59E0B 100%);
+  color: #1A1816 !important;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  border: 1px solid #D97706;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-figma-primary:hover,
+.btn-pramana:hover {
+  background: linear-gradient(180deg, #F59E0B 0%, #D97706 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.38);
+}
+
+.btn-figma-primary:active,
+.btn-pramana:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(245, 158, 11, 0.2);
+}
+
+.btn-figma-secondary {
+  background: #FFFFFF;
+  color: var(--ink-primary) !important;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-figma-secondary:hover {
+  background: var(--bg-page-subtle);
+  border-color: var(--ink-secondary);
+  color: var(--ink-primary);
+  transform: translateY(-1px);
+}
+
+.btn-figma-outline,
+.btn-pramana-outline {
+  background: transparent;
+  color: var(--ink-secondary);
+  border: 1px solid var(--border-strong);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-figma-outline:hover,
+.btn-pramana-outline:hover {
+  background: #FFFFFF;
+  border-color: var(--ink-primary);
+  color: var(--ink-primary);
+}
+
+/* ==========================================================================
+   STATUS & PRESETS RIBBON
+   ========================================================================== */
+.status-ribbon {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0.5rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.82rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.status-pill.online {
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+
+.status-pill.warning {
+  background: #FFFBEB;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+
+.preset-pill {
+  background: var(--bg-page-subtle);
+  color: var(--ink-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.preset-pill:hover {
+  background: #FFFFFF;
+  color: var(--ink-primary);
+  border-color: var(--gold-primary);
+  box-shadow: var(--shadow-xs);
+}
+
+.preset-pill.active {
+  background: var(--gold-light);
+  color: #92400E;
+  border-color: var(--gold-border);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   FIGMA LANDING OVERVIEW HERO SECTION
+   ========================================================================== */
+.figma-hero-section {
+  padding: 3.5rem 0 2.5rem 0;
+  position: relative;
+}
+
+.hero-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  color: var(--ink-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-xs);
+}
+
+.hero-pill-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-primary);
+}
+
+.hero-headline {
+  font-family: var(--font-display);
+  font-size: 3.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--ink-primary);
+  margin-bottom: 1.25rem;
+}
+
+.hero-subheading {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--ink-secondary);
+  max-width: 540px;
+  margin-bottom: 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.hero-guarantee {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Floating Dark Code Window (Figma Hero Right Column) */
+.figma-editor-panel {
+  background: var(--bg-dark-panel);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-dark);
+  box-shadow: var(--shadow-floating);
+  overflow: hidden;
+  position: relative;
+  transition: transform var(--transition-normal);
+}
+
+.figma-editor-panel:hover {
+  transform: translateY(-2px);
+}
+
+.editor-header-bar {
+  background: var(--bg-dark-surface);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.mac-traffic-lights {
+  display: flex;
+  gap: 6px;
+}
+
+.mac-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.mac-dot.red { background: #EF4444; }
+.mac-dot.yellow { background: #F59E0B; }
+.mac-dot.green { background: #10B981; }
+
+.editor-tab-title {
+  color: var(--ink-light);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.proof-verified-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.editor-code-body {
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: #E2E8F0;
+  background: var(--bg-dark-code);
+  overflow-x: auto;
+}
+
+.code-hl-kw { color: #F472B6; font-weight: 600; }
+.code-hl-fn { color: #60A5FA; }
+.code-hl-num { color: #FBBF24; }
+.code-hl-str { color: #34D399; }
+.code-hl-cmt { color: #64748B; font-style: italic; }
+
+.editor-annotation-box {
+  background: rgba(245, 158, 11, 0.1);
+  border-top: 1px solid rgba(245, 158, 11, 0.25);
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  color: #FDE68A;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==========================================================================
+   FIGMA SECTION: "KNOWING THE ANSWER ISN'T THE SAME AS KNOWING WHY"
+   ========================================================================== */
+.figma-section {
+  padding: 4rem 0;
+}
+
+.section-header {
+  margin-bottom: 2.5rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink-primary);
+  margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+  color: var(--ink-secondary);
+  font-size: 1.05rem;
+  max-width: 650px;
+}
+
+/* Figma Value Cards */
+.figma-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.figma-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-strong);
+}
+
+.card-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.icon-amber { background: var(--gold-light); color: #B45309; }
+.icon-blue { background: var(--blue-light); color: #1D4ED8; }
+.icon-purple { background: var(--purple-light); color: #6D28D9; }
+.icon-green { background: var(--green-light); color: #047857; }
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--ink-primary);
+}
+
+.card-description {
+  color: var(--ink-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  flex-grow: 1;
+}
+
+/* ==========================================================================
+   FIGMA SECTION: INTERACTIVE LOOP MACHINE ("A loop is a tiny repeat machine")
+   ========================================================================== */
+.loop-machine-container {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 2.25rem;
+  box-shadow: var(--shadow-md);
+}
+
+.iteration-tile {
+  background: var(--bg-page-subtle);
+  border: 2px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  text-align: center;
+  transition: all var(--transition-normal);
+}
+
+.iteration-tile.active {
+  background: var(--gold-light);
+  border-color: var(--gold-primary);
+  box-shadow: var(--shadow-gold);
+}
+
+.tile-number {
+  font-family: var(--font-display);
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-primary);
+  margin-bottom: 4px;
+}
+
+.tile-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   THINKING PARTNER COMPARISON (EXPLAINER VS BUG DNA)
+   ========================================================================== */
+.comparison-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  height: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.comparison-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.badge-learn { background: var(--gold-light); color: #B45309; }
+.badge-debug { background: var(--rose-light); color: #BE123C; }
+
+/* ==========================================================================
+   CONCEPT MASTERY & SKILL TREE
+   ========================================================================== */
+.skill-tree-node {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--transition-fast);
+}
+
+.skill-tree-node:hover {
+  transform: translateX(4px);
+  border-color: var(--gold-border);
+}
+
+.node-status-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+}
+
+.status-mastered { background: #ECFDF5; color: #059669; }
+.status-progress { background: var(--gold-light); color: #B45309; }
+
+/* ==========================================================================
+   FIGMA ACCORDION FAQ
+   ========================================================================== */
+.figma-accordion .accordion-item {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg) !important;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--transition-fast);
+}
+
+.figma-accordion .accordion-item:hover {
+  border-color: var(--border-strong);
+}
+
+.figma-accordion .accordion-button {
+  background: #FFFFFF;
+  color: var(--ink-primary);
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  padding: 1.1rem 1.4rem;
+  box-shadow: none !important;
+}
+
+.figma-accordion .accordion-button:not(.collapsed) {
+  background: var(--bg-page-subtle);
+  color: var(--gold-hover);
+}
+
+.figma-accordion .accordion-body {
+  color: var(--ink-secondary);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  padding: 1rem 1.4rem 1.4rem 1.4rem;
+}
+
+/* ==========================================================================
+   PRE-FOOTER CTA CARD ("Don't just learn it. Make it yours.")
+   ========================================================================== */
+.figma-cta-banner {
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 50%, #FDE68A 100%);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-xl);
+  padding: 3.5rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.cta-seal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #FFFFFF;
+  border: 1px solid var(--gold-border);
+  color: #92400E;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 1.25rem;
+}
+
+.cta-headline {
+  font-family: var(--font-display);
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #1A1816;
+  margin-bottom: 0.75rem;
+  line-height: 1.15;
+}
+
+.cta-subtext {
+  font-size: 1.1rem;
+  color: #78350F;
+  max-width: 600px;
+  margin: 0 auto 2rem auto;
+}
+
+/* ==========================================================================
+   FOOTER (4 COLUMNS)
+   ========================================================================== */
+.figma-footer {
+  background: #FFFFFF;
+  border-top: 1px solid var(--border-light);
+  padding: 3.5rem 0 2rem 0;
+  margin-top: auto;
+}
+
+.footer-col-title {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-primary);
+  margin-bottom: 1rem;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+  color: var(--ink-muted);
+  font-size: 0.88rem;
+  transition: color var(--transition-fast);
+}
+
+.footer-links a:hover {
+  color: var(--gold-hover);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border-light);
+  padding-top: 1.5rem;
+  margin-top: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+}
+
+/* ==========================================================================
+   WORKSPACE STYLES (LEARN, DEBUG, GAME, DOCS SECTIONS)
+   ========================================================================== */
+.pramana-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+}
+
+.pramana-card:hover {
+  border-color: var(--border-strong);
+}
+
+.pramana-card-header {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-light);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pramana-card-body {
+  padding: 1.25rem;
+}
+
+/* Dark Code Editor Inside Workspace */
+.code-editor-wrapper {
+  display: flex;
+  background: var(--bg-dark-panel);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.line-numbers-col {
+  width: 44px;
+  background: var(--bg-dark-surface);
+  color: #64748B;
+  padding: 12px 0;
+  text-align: right;
+  user-select: none;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  border-right: 1px solid var(--border-dark);
+  overflow-y: hidden;
+}
+
+.line-numbers-col .line-num {
+  display: block;
+  padding-right: 10px;
+}
+
+.code-textarea {
+  flex-grow: 1;
+  background: var(--bg-dark-panel);
+  color: #F8FAFC;
+  border: none;
+  outline: none;
+  padding: 12px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  resize: none;
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
+/* Interactive Lines List in Results */
+.interactive-line-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  border: 1px solid transparent;
+}
+
+.interactive-line-item:hover {
+  background: var(--bg-page-subtle);
+  border-color: var(--border-light);
+}
+
+.interactive-line-item.selected {
+  background: var(--gold-light);
+  border-color: var(--gold-border);
+}
+
+.interactive-line-num {
+  width: 32px;
+  color: var(--ink-muted);
+  text-align: right;
+  font-size: 0.8rem;
+  user-select: none;
+}
+
+/* Line Detail Card */
+.line-inspector-detail {
+  background: var(--gold-surface);
+  border: 1px solid var(--gold-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Trace Table */
+.trace-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+}
+
+.trace-table th {
+  background: var(--bg-page-subtle);
+  color: var(--ink-secondary);
+  font-weight: 600;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-light);
+  text-align: left;
+}
+
+.trace-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-light);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.trace-table tr:hover td {
+  background: var(--gold-surface);
+}
+
+/* Evidence Cards & Badges */
+.evidence-card {
+  background: #FFFFFF;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-xs);
+  transition: all var(--transition-fast);
+}
+
+.evidence-card:hover {
+  border-color: var(--gold-primary);
+  transform: translateY(-1px);
+}
+
+.evidence-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.evidence-passage-text {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  background: var(--bg-dark-panel);
+  color: #E2E8F0;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Spinner */
+.spinner-pramana {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: -0.125em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border .75s linear infinite;
+}
+
+@keyframes spinner-border {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+  .hero-headline {
+    font-size: 2.5rem;
+  }
+  .figma-cta-banner {
+    padding: 2.5rem 1.5rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-headline {
+    font-size: 2.1rem;
+  }
+  .status-ribbon {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   MODAL STYLES (FIGMA NOTICE MODAL)
+   ========================================================================== */
+#globalModal .modal-content {
+  background-color: #FFFFFF !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: 0 20px 48px -8px rgba(24, 23, 21, 0.22) !important;
+  color: #252525 !important;
+  overflow: hidden;
+}
+
+#globalModal .modal-header {
+  background-color: #FFFFFF !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+#globalModal .modal-title {
+  color: #181715 !important;
+  font-family: var(--font-display) !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em;
+}
+
+#globalModal .btn-close {
+  opacity: 0.75 !important;
+  filter: none !important;
+  transition: opacity var(--transition-fast) !important;
+}
+
+#globalModal .btn-close:hover {
+  opacity: 1 !important;
+}
+
+#globalModal .modal-body,
+#globalModalBody {
+  background-color: #FFFFFF !important;
+  padding: 1.5rem !important;
+  color: #252525 !important;
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+}
+
+#globalModal .modal-body *,
+#globalModalBody *,
+#globalModal .text-light,
+#globalModalBody .text-light,
+.modal-notice-message {
+  color: #252525 !important;
+  font-size: 18px !important;
+  line-height: 1.6 !important;
+  font-family: var(--font-sans) !important;
+  opacity: 1 !important;
+}
+
+#globalModal .modal-footer {
+  background-color: #FAF8F5 !important;
+  border-top: 1px solid var(--border-light) !important;
+  padding: 1rem 1.5rem !important;
+}
+
+#globalModal .modal-footer .btn-figma-primary,
+#globalModal .modal-footer .btn-pramana {
+  font-size: 0.95rem !important;
+  padding: 8px 24px !important;
+}
+
+/* ==========================================================================
+   GAME ARENA STYLES & CONTRAST FIXES
+   ========================================================================== */
+
+/* 1. Game Selector Tabs (Fix The Bug, Find The Error, Explain The Code) */
+#section-game .game-selector-tab {
+  background: #FFFFFF;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-xs);
+  height: 100%;
+}
+
+#section-game .game-selector-tab h6,
+#section-game .game-selector-tab .fw-bold {
+  color: #181715 !important;
+  font-family: var(--font-sans);
+  font-weight: 700 !important;
+}
+
+#section-game .game-selector-tab p,
+#section-game .game-selector-tab .text-secondary {
+  color: #4A4742 !important;
+}
+
+#section-game .game-selector-tab:hover {
+  transform: translateY(-2px);
+  border-color: var(--gold-border);
+  box-shadow: var(--shadow-sm);
+}
+
+#section-game .game-selector-tab.active {
+  background: var(--gold-surface);
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 1.5px var(--gold-primary), var(--shadow-gold);
+}
+
+#section-game .game-selector-tab.active h6 {
+  color: #92400E !important;
+}
+
+/* 2. Challenge List Items & Solved State */
+#section-game #game-challenges-list > div,
+#section-game .challenge-list-item {
+  background-color: #FFFFFF !important;
+  border: 1.5px solid var(--border-light) !important;
+  border-radius: var(--radius-md) !important;
+  transition: all var(--transition-fast);
+  color: #252525 !important;
+}
+
+#section-game #game-challenges-list > div:hover {
+  background-color: var(--bg-page-subtle) !important;
+  border-color: var(--border-strong) !important;
+  transform: translateX(2px);
+}
+
+#section-game #game-challenges-list > div.border-primary,
+#section-game #game-challenges-list > div.active,
+#section-game #game-challenges-list > div.bg-card-hover {
+  background-color: var(--gold-surface) !important;
+  border-color: var(--gold-primary) !important;
+  box-shadow: 0 0 0 1.5px var(--gold-primary), var(--shadow-xs) !important;
+}
+
+/* OVERRIDE BOOTSTRAP .text-light ON CHALLENGE TITLES & LABELS */
+#section-game #game-challenges-list .text-light,
+#section-game #game-challenges-list div.fw-bold,
+#section-game #game-challenges-list .game-challenge-title,
+#section-game #game-active-arena .pramana-card-header .text-light,
+#section-game #game-active-arena .pramana-card-header .game-challenge-title,
+#section-game #game-active-arena .pramana-card-body .text-light:not(pre):not(code),
+#section-game #game-active-arena strong.text-light,
+#section-game #game-active-arena .game-section-label {
+  color: #252525 !important;
+  -webkit-text-fill-color: #252525 !important;
+  opacity: 1 !important;
+  font-weight: 700 !important;
+}
+
+#section-game #game-challenges-list .text-muted,
+#section-game #game-challenges-list .text-secondary {
+  color: #4A4742 !important;
+  opacity: 1 !important;
+}
+
+/* Solved and Not-Attempted Badges */
+#section-game #game-challenges-list .badge.bg-success {
+  background-color: #10B981 !important;
+  color: #FFFFFF !important;
+}
+
+/* Active Arena Header */
+#section-game #game-active-arena .pramana-card-header {
+  background-color: #FFFFFF !important;
+  border-bottom: 1.5px solid var(--border-light) !important;
+  padding: 12px 18px;
+}
+
+#section-game #game-active-arena .pramana-card-header .fw-bold,
+#section-game #game-active-arena .pramana-card-header .game-challenge-title {
+  color: #181715 !important;
+  font-size: 1.15rem;
+}
+
+/* 3. Code Snippet Dark Panel (High-Contrast & Legibility) */
+#section-game .interactive-code-viewer {
+  background-color: var(--bg-dark-panel) !important;
+  border: 1px solid var(--border-dark) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 12px 14px !important;
+  overflow-x: auto;
+}
+
+#section-game .interactive-code-viewer pre,
+#section-game .interactive-code-viewer pre.text-light,
+#section-game #game-active-arena pre.game-code-snippet,
+#section-game #game-active-arena pre.text-light {
+  background-color: transparent !important;
+  color: #F8FAFC !important;
+  -webkit-text-fill-color: #F8FAFC !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6 !important;
+  opacity: 1 !important;
+}
+
+/* 4. Challenge Question Prompt */
+#section-game #game-active-arena .mb-3 strong,
+#section-game #game-active-arena .mb-3 strong.text-light,
+#section-game #game-active-arena .game-section-label {
+  color: #181715 !important;
+  -webkit-text-fill-color: #181715 !important;
+  font-size: 0.95rem !important;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+#section-game #game-active-arena p.text-secondary {
+  color: #252525 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.6 !important;
+  background: var(--bg-page-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+
+/* 5. Game Answer Options */
+#section-game .game-option-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background-color: #FFFFFF !important;
+  color: #252525 !important;
+  -webkit-text-fill-color: #252525 !important;
+  border: 1.5px solid var(--border-light) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 12px 16px !important;
+  margin-bottom: 8px !important;
+  font-family: var(--font-mono), monospace !important;
+  font-size: 0.92rem !important;
+  line-height: 1.5 !important;
+  transition: all var(--transition-fast) !important;
+  cursor: pointer;
+  opacity: 1 !important;
+}
+
+#section-game .game-option-btn span.text-muted {
+  color: var(--gold-hover) !important;
+  font-weight: 700;
+}
+
+#section-game .game-option-btn:hover {
+  background-color: var(--bg-page-subtle) !important;
+  border-color: var(--gold-primary) !important;
+  color: #181715 !important;
+  -webkit-text-fill-color: #181715 !important;
+  transform: translateX(2px);
+}
+
+#section-game .game-option-btn.selected {
+  background-color: var(--gold-light) !important;
+  border-color: var(--gold-primary) !important;
+  color: #92400E !important;
+  -webkit-text-fill-color: #92400E !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 0 1.5px var(--gold-primary), var(--shadow-sm) !important;
+}
+
+#section-game .game-option-btn.correct {
+  background-color: #ECFDF5 !important;
+  border-color: #10B981 !important;
+  color: #065F46 !important;
+  -webkit-text-fill-color: #065F46 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 0 1.5px #10B981 !important;
+}
+
+#section-game .game-option-btn.wrong {
+  background-color: #FFF1F2 !important;
+  border-color: #F43F5E !important;
+  color: #9F1239 !important;
+  -webkit-text-fill-color: #9F1239 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 0 1.5px #F43F5E !important;
+}
+
+/* 6. Feedback Area Result Messages */
+#section-game #game-feedback-area .alert-success {
+  background-color: #ECFDF5 !important;
+  border: 1.5px solid #A7F3D0 !important;
+  color: #065F46 !important;
+  border-radius: var(--radius-md) !important;
+}
+
+#section-game #game-feedback-area .alert-success .fw-bold {
+  color: #065F46 !important;
+  font-size: 1rem;
+}
+
+#section-game #game-feedback-area .alert-success .text-light,
+#section-game #game-feedback-area .alert-success .game-feedback-explanation,
+#section-game #game-feedback-area .alert-success .small {
+  color: #047857 !important;
+  -webkit-text-fill-color: #047857 !important;
+  font-size: 0.92rem !important;
+  line-height: 1.6 !important;
+}
+
+#section-game #game-feedback-area .alert-danger {
+  background-color: #FFF1F2 !important;
+  border: 1.5px solid #FECDD3 !important;
+  color: #9F1239 !important;
+  border-radius: var(--radius-md) !important;
+}
+
+#section-game #game-feedback-area .alert-danger .fw-bold {
+  color: #9F1239 !important;
+  font-size: 1rem;
+}
+
+#section-game #game-feedback-area .alert-danger .text-light,
+#section-game #game-feedback-area .alert-danger .game-feedback-explanation,
+#section-game #game-feedback-area .alert-danger .small {
+  color: #881337 !important;
+  -webkit-text-fill-color: #881337 !important;
+  font-size: 0.92rem !important;
+  line-height: 1.6 !important;
+}
+
+#section-game #game-feedback-area pre {
+  background-color: var(--bg-dark-panel) !important;
+  color: #34D399 !important;
+  -webkit-text-fill-color: #34D399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  border-radius: var(--radius-sm) !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.85rem !important;
+  line-height: 1.5 !important;
+  padding: 8px 12px !important;
+}
+
+#section-game #game-feedback-area .alert-success strong.text-muted {
+  color: #065F46 !important;
+  font-weight: 700;
+}
+
+/* 7. Action Buttons, Borders & Filter Group */
+#section-game .border-secondary {
+  border-color: var(--border-light) !important;
+}
+
+#section-game .btn-group .btn-outline-secondary {
+  border-color: var(--border-strong) !important;
+  color: #4A4742 !important;
+  font-weight: 600;
+}
+
+#section-game .btn-group .btn-outline-secondary:hover {
+  background-color: var(--bg-page-subtle) !important;
+  color: #181715 !important;
+}
+
+#section-game .btn-group .btn-outline-secondary.active {
+  background-color: var(--gold-primary) !important;
+  border-color: var(--gold-primary) !important;
+  color: #1A1816 !important;
+  font-weight: 700;
+}
+
+#section-game #btn-submit-game-answer:disabled {
+  opacity: 0.55 !important;
+  cursor: not-allowed;
+}
+
+/* 8. Mobile & Responsive Refinements */
+@media (max-width: 768px) {
+  #section-game .game-selector-tab {
+    padding: 1rem 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  #section-game .game-option-btn {
+    font-size: 0.85rem !important;
+    padding: 10px 12px !important;
+  }
+  #section-game .interactive-code-viewer pre {
+    font-size: 0.8rem !important;
+  }
+}
+
+

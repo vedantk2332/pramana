@@ -8,7 +8,10 @@ import os
 import logging
 from pathlib import Path
 from typing import Optional, Tuple, Dict, Any
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -32,7 +35,7 @@ def get_gemini_api_key(force_reload: bool = False) -> str:
     # If key is empty or is placeholder, or reload requested, attempt fresh load from .env
     if not key or key == placeholder or force_reload:
         env_path = get_env_file_path()
-        if env_path.exists():
+        if env_path.exists() and load_dotenv:
             load_dotenv(env_path, override=True)
             key = os.getenv('GEMINI_API_KEY', '').strip()
 
@@ -48,7 +51,7 @@ def get_api_key_diagnostic() -> Dict[str, Any]:
     """
     env_path = get_env_file_path()
     raw_env_key = ''
-    if env_path.exists():
+    if env_path.exists() and load_dotenv:
         load_dotenv(env_path, override=True)
         raw_env_key = os.getenv('GEMINI_API_KEY', '').strip()
 

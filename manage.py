@@ -7,11 +7,13 @@ import sys
 def main():
     """Run administrative tasks."""
     from pathlib import Path
-    from dotenv import load_dotenv
-
-    env_path = Path(__file__).resolve().parent / '.env'
-    if env_path.exists():
-        load_dotenv(env_path, override=True)
+    try:
+        from dotenv import load_dotenv
+        env_path = Path(__file__).resolve().parent / '.env'
+        if env_path.exists():
+            load_dotenv(env_path, override=True)
+    except ImportError:
+        pass
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pramana_core.settings')
     try:

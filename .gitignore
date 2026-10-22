@@ -47,8 +47,9 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# Collected static files (built dynamically via collectstatic on Vercel)
-staticfiles/
+# Pre-collected static files tracked for zero-build serverless deployment
+!staticfiles/
+!staticfiles/**
 
 # User uploads and media (keep pre-indexed trees.pdf for RAG demo)
 media/

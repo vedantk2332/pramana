@@ -4,15 +4,17 @@ Django settings for pramana_core project.
 
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from absolute path to .env
-ENV_FILE = BASE_DIR / '.env'
-if ENV_FILE.exists():
-    load_dotenv(ENV_FILE, override=True)
+# Load environment variables from absolute path to .env if python-dotenv is installed
+try:
+    from dotenv import load_dotenv
+    ENV_FILE = BASE_DIR / '.env'
+    if ENV_FILE.exists():
+        load_dotenv(ENV_FILE, override=True)
+except ImportError:
+    pass
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-pramana-hackathon-development-key')
@@ -149,6 +151,10 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+# Fallback to AppDirectoriesFinder if a static file is not in STATIC_ROOT
+WHITENOISE_USE_FINDERS = True
+
 
 # Media files
 MEDIA_URL = '/media/'
