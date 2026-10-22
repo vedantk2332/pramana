@@ -1,0 +1,1267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pramana &mdash; Learn Code with Proof, Not Promises</title>
+  <meta name="description" content="Pramana: Sanskrit for valid knowledge and proof. An evidence-backed AI programming tutor, line-by-line code explainer, Bug DNA debugger, and interactive game arena.">
+  
+  <!-- Google Fonts: Newsreader (Editorial Serif), Inter (Sans), JetBrains Mono (Code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Pramana Custom Figma Design System -->
+  <link rel="stylesheet" href="{% static 'pramana/css/style.css' %}">
+</head>
+<body>
+
+  <!-- ====================================================================
+       TOP NAVIGATION BAR (FIGMA WARM EDITORIAL HEADER)
+       ==================================================================== -->
+  <header class="navbar-pramana">
+    <div class="container-fluid px-lg-4 d-flex justify-content-between align-items-center">
+      
+      <!-- Brand Logo & Sanskrit Meaning -->
+      <a href="#" class="brand-badge" data-switch-tab="overview">
+        <div class="brand-icon">
+          <i class="bi bi-shield-check"></i>
+        </div>
+        <div>
+          <div class="brand-title">Pramana</div>
+          <div class="brand-tagline">Sanskrit for Valid Proof</div>
+        </div>
+      </a>
+
+      <!-- Main Navigation Pills matching Figma -->
+      <ul class="nav nav-pills-figma" id="main-nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" href="#" data-tab="overview">
+            <i class="bi bi-compass"></i> <span>Overview</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-tab="learn">
+            <i class="bi bi-code-slash"></i> <span>Explain Code</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-tab="debug">
+            <i class="bi bi-bug"></i> <span>Bug DNA</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-tab="game">
+            <i class="bi bi-controller"></i> <span>Game Arena</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-tab="docs">
+            <i class="bi bi-journal-text"></i> <span>Evidence Docs</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- User XP, Level Badge & Quick Launch CTA -->
+      <div class="d-flex align-items-center gap-2">
+        <span class="level-badge" id="user-level-badge">Lvl 1</span>
+        <div class="xp-badge" id="user-xp-counter"><i class="bi bi-lightning-charge-fill text-warning"></i> 0 XP</div>
+        <button class="btn btn-figma-primary btn-sm d-none d-sm-inline-flex" data-switch-tab="learn">
+          <i class="bi bi-play-circle-fill"></i> Start Learning
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Status Ribbon & Presets Bar -->
+  <div class="status-ribbon">
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <span class="status-pill {% if has_api_key %}online{% else %}warning{% endif %}" id="ai-status-pill">
+        {% if has_api_key %}
+          <i class="bi bi-check-circle-fill"></i> AI Active ({{ gemini_model }})
+        {% else %}
+          <i class="bi bi-exclamation-triangle-fill"></i> GEMINI_API_KEY Missing
+        {% endif %}
+      </span>
+      <span class="text-secondary small">&bull;</span>
+      <span class="text-secondary small" id="status-doc-count">{{ total_docs }} Docs ({{ total_chunks }} Chunks)</span>
+      <span class="text-secondary small">&bull;</span>
+      <span class="text-muted small fw-semibold">"Don't just trust the answer. See the proof."</span>
+    </div>
+
+    <!-- Quick Load Presets -->
+    <div class="d-flex align-items-center gap-1 flex-wrap">
+      <span class="text-muted small me-1">Try Preset:</span>
+      <button class="preset-pill active" data-load-preset="c_bst_insert"><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i>BST Insert (trees.pdf)</button>
+      <button class="preset-pill" data-load-preset="c_inorder"><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i>Inorder (trees.pdf)</button>
+      <button class="preset-pill" data-load-preset="cpp_factorial"><i class="bi bi-bug-fill me-1 text-warning"></i>C++ Factorial Bug</button>
+      <button class="preset-pill" data-load-preset="off_by_one">Off-by-One</button>
+      <button class="preset-pill" data-load-preset="mutable_default">Mutable Default</button>
+      <button class="preset-pill" data-load-preset="type_mismatch">Type Error</button>
+      <button class="preset-pill" data-load-preset="slicing">Slicing</button>
+    </div>
+  </div>
+
+  <!-- Main Content Body -->
+  <main class="container-fluid px-lg-4 py-3 flex-grow-1">
+
+    <!-- ====================================================================
+         SECTION 0: FIGMA LANDING OVERVIEW (THE COMPLETE DESIGN REFERENCE)
+         ==================================================================== -->
+    <section id="section-overview" class="tab-section">
+      
+      <!-- HERO SECTION -->
+      <div class="figma-hero-section">
+        <div class="row align-items-center g-4">
+          
+          <!-- Left Column: Typography & CTAs -->
+          <div class="col-lg-6">
+            <div class="hero-pill-badge">
+              <span class="dot"></span> Pramana 2.0 &bull; AI Coding Tutor with Genuine Proof
+            </div>
+            
+            <h1 class="hero-headline">
+              Learn code with proof, not promises.
+            </h1>
+            
+            <p class="hero-subheading">
+              An AI tutor that traces every step, verifies every fix against official documentation, and never leaves you guessing.
+            </p>
+            
+            <div class="hero-actions">
+              <button class="btn btn-figma-primary" data-switch-tab="learn">
+                <i class="bi bi-play-circle-fill"></i> Start Learning Now
+              </button>
+              <button class="btn btn-figma-secondary" data-switch-tab="debug">
+                <i class="bi bi-bug"></i> Inspect a Bug
+              </button>
+            </div>
+            
+            <div class="hero-guarantee">
+              <i class="bi bi-shield-check text-success fs-6"></i>
+              <span>Grounded in FAISS Vector Store &bull; Zero arbitrary code execution on server</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Floating Dark Code Window with Live Trace -->
+          <div class="col-lg-6">
+            <div class="figma-editor-panel">
+              <div class="editor-header-bar">
+                <div class="mac-traffic-lights">
+                  <span class="mac-dot red"></span>
+                  <span class="mac-dot yellow"></span>
+                  <span class="mac-dot green"></span>
+                </div>
+                <div class="editor-tab-title">
+                  <i class="bi bi-file-earmark-code"></i> count_the_visits.py
+                </div>
+                <div class="proof-verified-badge">
+                  <i class="bi bi-check-circle-fill me-1"></i> 100% Grounded
+                </div>
+              </div>
+
+              <div class="editor-code-body">
+<span class="code-hl-cmt"># A loop is a tiny repeat machine. See it don't guess it.</span>
+<span class="code-hl-kw">total</span> = <span class="code-hl-num">0</span>
+<span class="code-hl-kw">for</span> step <span class="code-hl-kw">in</span> [<span class="code-hl-num">2</span>, <span class="code-hl-num">5</span>, <span class="code-hl-num">8</span>]:
+    <span class="code-hl-kw">total</span> += step  <span class="code-hl-cmt"># Step 1: total=2, Step 2: total=7, Step 3: total=15</span>
+
+<span class="code-hl-fn">print</span>(<span class="code-hl-str">"Final Accumulator:"</span>, total)  <span class="code-hl-cmt"># Output: 15</span>
+              </div>
+
+              <div class="editor-annotation-box">
+                <div>
+                  <strong><i class="bi bi-check-all text-warning me-1"></i> Interactive Memory Trace:</strong>
+                  <span>Iteration 3 of 3 &bull; accumulator state: <code>total = 15</code></span>
+                </div>
+                <button class="btn btn-sm btn-figma-outline py-0 px-2" data-switch-tab="learn">
+                  Inspect in Learn Mode →
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- VALUE PROPOSITION BAR: "Knowing the answer isn't the same as knowing why." -->
+      <div class="figma-section">
+        <div class="section-header">
+          <h2 class="section-title">Knowing the answer isn't the same as knowing why.</h2>
+          <p class="section-subtitle">
+            Most AI tools give you code without explaining the underlying mechanics. Pramana breaks down cause, effect, and state transitions so you truly understand.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="card-icon-wrapper icon-amber">
+                <i class="bi bi-eye"></i>
+              </div>
+              <h3 class="card-title">See the why</h3>
+              <p class="card-description">
+                Understand logic line-by-line. Not just what the code does, but why it was written that way and how it connects to surrounding statements.
+              </p>
+              <button class="btn btn-figma-outline w-100" data-switch-tab="learn">
+                Try Line Explainer →
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="card-icon-wrapper icon-blue">
+                <i class="bi bi-hand-index-thumb"></i>
+              </div>
+              <h3 class="card-title">Touch the code</h3>
+              <p class="card-description">
+                Interactive line inspector, concrete iteration tables, and step-by-step state tracking make invisible execution paths tactile and clear.
+              </p>
+              <button class="btn btn-figma-outline w-100" data-switch-tab="debug">
+                Explore Bug DNA →
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="card-icon-wrapper icon-green">
+                <i class="bi bi-shield-check"></i>
+              </div>
+              <h3 class="card-title">Proof over trust</h3>
+              <p class="card-description">
+                Every critical claim is verified against indexed documentation in FAISS, with exact page numbers, similarity scores, and zero hallucinations.
+              </p>
+              <button class="btn btn-figma-outline w-100" data-switch-tab="docs">
+                View Evidence Docs →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- THREE ACTION CARDS: "Big possibilities, small first steps." -->
+      <div class="figma-section pt-0">
+        <div class="section-header">
+          <h2 class="section-title">Big possibilities, small first steps.</h2>
+          <p class="section-subtitle">Choose your learning path with dedicated interactive workspaces.</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-warning text-dark px-2 py-1 small fw-bold">Step-by-Step Logic</span>
+                <i class="bi bi-code-square text-warning fs-5"></i>
+              </div>
+              <h3 class="card-title">Python &amp; C++ Foundations</h3>
+              <p class="card-description">
+                Break down loops, recursion, and accumulator patterns with conversational simplicity and mathematical accuracy.
+              </p>
+              <button class="btn btn-figma-primary w-100" data-switch-tab="learn">
+                Open Line Explainer →
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-primary px-2 py-1 small fw-bold">Root Cause Triage</span>
+                <i class="bi bi-bug text-primary fs-5"></i>
+              </div>
+              <h3 class="card-title">Bug DNA Debugger</h3>
+              <p class="card-description">
+                Separate visible symptoms from underlying root causes. Receive minimal diff fixes verified by safe static AST checks.
+              </p>
+              <button class="btn btn-figma-secondary w-100" data-switch-tab="debug">
+                Analyze Bug DNA →
+              </button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="badge bg-purple text-white px-2 py-1 small fw-bold" style="background: #8B5CF6;">Gamified Practice</span>
+                <i class="bi bi-controller text-purple fs-5" style="color: #8B5CF6;"></i>
+              </div>
+              <h3 class="card-title">Think in Algorithms</h3>
+              <p class="card-description">
+                Solve bite-sized debugging challenges, climb levels, earn XP, and build genuine algorithmic intuition.
+              </p>
+              <button class="btn btn-figma-secondary w-100" data-switch-tab="game">
+                Enter Game Arena →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUAL LOOP MACHINE: "A loop is a tiny repeat machine." -->
+      <div class="figma-section pt-0">
+        <div class="loop-machine-container">
+          <div class="row align-items-center g-4">
+            
+            <div class="col-lg-5">
+              <span class="hero-pill-badge mb-2">
+                <span class="dot"></span> Loop Visualizer
+              </span>
+              <h2 class="section-title mb-2">A loop is a tiny repeat machine.</h2>
+              <p class="text-secondary mb-3">
+                See it, don't guess it. Watch variables mutate step-by-step across each iteration without running unsafe code.
+              </p>
+
+              <div class="row g-2 mb-3">
+                <div class="col-4">
+                  <div class="iteration-tile active">
+                    <div class="tile-number">2</div>
+                    <div class="tile-label">Step 1</div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="iteration-tile active">
+                    <div class="tile-number">5</div>
+                    <div class="tile-label">Step 2</div>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="iteration-tile active">
+                    <div class="tile-number">8</div>
+                    <div class="tile-label">Step 3</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-2 rounded bg-light border border-light small text-secondary">
+                <strong class="text-dark">Boundary Truth:</strong> <code>i &lt; n</code> terminates before reaching <code>n</code>, whereas <code>i &lt;= n</code> includes the final boundary.
+              </div>
+            </div>
+
+            <div class="col-lg-7">
+              <div class="figma-editor-panel">
+                <div class="editor-header-bar">
+                  <div class="mac-traffic-lights">
+                    <span class="mac-dot red"></span>
+                    <span class="mac-dot yellow"></span>
+                    <span class="mac-dot green"></span>
+                  </div>
+                  <div class="editor-tab-title">
+                    <i class="bi bi-cpu"></i> accumulator_trace.py
+                  </div>
+                  <span class="badge bg-warning text-dark small fw-bold">Live Visual Trace</span>
+                </div>
+
+                <div class="editor-code-body">
+<span class="code-hl-cmt"># Concrete State Mutation:</span>
+[Initial]  total = 0, steps = [2, 5, 8]
+[Step 1]   step = 2  &bull; total = 0 + 2 = <span class="code-hl-num">2</span>
+[Step 2]   step = 5  &bull; total = 2 + 5 = <span class="code-hl-num">7</span>
+[Step 3]   step = 8  &bull; total = 7 + 8 = <span class="code-hl-num">15</span>
+[Complete] Result: 15 &bull; Total visits: 3
+                </div>
+
+                <div class="editor-annotation-box">
+                  <span class="small text-warning"><i class="bi bi-info-circle me-1"></i> Pramana builds an exact trace table for every analyzed snippet.</span>
+                  <button class="btn btn-sm btn-pramana py-0 px-2" data-switch-tab="learn">
+                    Inspect Factorial Trace →
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- THINKING PARTNER BREAKDOWN -->
+      <div class="figma-section pt-0">
+        <div class="section-header">
+          <h2 class="section-title">A thinking partner, Not a shortcut.</h2>
+          <p class="section-subtitle">
+            Pramana teaches you to think like an engineer by pairing deep reasoning with rigorous proof.
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <!-- Card 1: Line Explainer -->
+          <div class="col-lg-6">
+            <div class="comparison-card">
+              <span class="comparison-badge badge-learn">
+                <i class="bi bi-mortarboard-fill me-1"></i> Pramana Line Explainer
+              </span>
+              <h3 class="card-title">Statement-by-Statement Breakdown</h3>
+              <p class="card-description">
+                Every line is categorized by what it does, why it was chosen, how it connects to adjacent statements, and what risk occurs if modified.
+              </p>
+
+              <div class="p-3 rounded bg-light border border-light mb-3">
+                <div class="fw-bold text-dark small mb-1">Statement Role:</div>
+                <div class="text-secondary small"><code>for (int i = 2; i &lt; n; i++)</code> &bull; Loop header omitting final factor when <code>i &lt; n</code> is used.</div>
+              </div>
+
+              <button class="btn btn-figma-primary w-100" data-switch-tab="learn">
+                Open Learn Mode →
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: Bug DNA -->
+          <div class="col-lg-6">
+            <div class="comparison-card">
+              <span class="comparison-badge badge-debug">
+                <i class="bi bi-bug-fill me-1"></i> Pramana Bug DNA
+              </span>
+              <h3 class="card-title">Root Cause vs. Visible Symptom</h3>
+              <p class="card-description">
+                Never confuse an error message with the true underlying bug. Pramana identifies the root cause and provides tested minimal diff fixes.
+              </p>
+
+              <div class="p-3 rounded bg-light border border-light mb-3">
+                <div class="fw-bold text-dark small mb-1">AST Static Verification:</div>
+                <div class="text-secondary small"><i class="bi bi-check-circle-fill text-success me-1"></i> Validated against Python/C++ grammar without executing untrusted code.</div>
+              </div>
+
+              <button class="btn btn-figma-secondary w-100" data-switch-tab="debug">
+                Open Debug Mode →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROOF PILLARS -->
+      <div class="figma-section pt-0">
+        <div class="section-header">
+          <h2 class="section-title">The best kind of confidence? The kind you can check.</h2>
+          <p class="section-subtitle">Three pillars of evidence-backed programming education.</p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="card-icon-wrapper icon-amber">
+                <i class="bi bi-123"></i>
+              </div>
+              <h3 class="card-title">Count the visits</h3>
+              <p class="card-description">
+                Step through loop executions and branch decisions iteration by iteration with concrete inputs.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="card-icon-wrapper icon-blue">
+                <i class="bi bi-journal-bookmark"></i>
+              </div>
+              <h3 class="card-title">Find the line match</h3>
+              <p class="card-description">
+                Ground answers in real uploaded textbooks and documentation in FAISS, such as <code>trees.pdf</code>.
+              </p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="figma-card">
+              <div class="card-icon-wrapper icon-purple">
+                <i class="bi bi-shield-lock"></i>
+              </div>
+              <h3 class="card-title">A word, overheard</h3>
+              <p class="card-description">
+                Safe AST static analysis inspects syntax trees and prevents malicious or runaway code execution.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONCEPT MASTERY & SKILL PROGRESSION -->
+      <div class="figma-section pt-0">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-6">
+            <h2 class="section-title">Progress that means something. The kind you can feel.</h2>
+            <p class="text-secondary mb-4">
+              Watch your conceptual understanding expand across core programming topics. Every challenge solved in Game Arena earns verifiable XP.
+            </p>
+
+            <div class="skill-tree-node">
+              <div class="node-status-icon status-mastered">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <div>
+                <strong class="text-dark small d-block">Loops &amp; Iteration Semantics</strong>
+                <span class="text-muted small">Accumulator bounds, range stepping, off-by-one prevention</span>
+              </div>
+            </div>
+
+            <div class="skill-tree-node">
+              <div class="node-status-icon status-mastered">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <div>
+                <strong class="text-dark small d-block">Binary Search Trees (trees.pdf)</strong>
+                <span class="text-muted small">Recursive insertion, in-order traversal, delete node mechanics</span>
+              </div>
+            </div>
+
+            <div class="skill-tree-node">
+              <div class="node-status-icon status-progress">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+              <div>
+                <strong class="text-dark small d-block">Algorithm Complexity &amp; State Leaks</strong>
+                <span class="text-muted small">Mutable parameter trap, time &amp; space Big-O analysis</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="figma-card p-4 text-center">
+              <span class="xp-badge mb-3"><i class="bi bi-trophy-fill me-1"></i> Interactive Game Arena</span>
+              <h3 class="card-title mb-2">Practice with 3 Dedicated Game Modes</h3>
+              <p class="card-description mb-4">
+                Test your skills with <strong>Fix The Bug</strong>, <strong>Find The Error</strong>, and <strong>Explain The Code</strong>.
+              </p>
+              <button class="btn btn-figma-primary" data-switch-tab="game">
+                <i class="bi bi-controller me-2"></i> Play Coding Games Now
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ ACCORDION -->
+      <div class="figma-section pt-0">
+        <div class="section-header">
+          <h2 class="section-title">You don't need to "be a coding person." Curiosity starts right here.</h2>
+          <p class="section-subtitle">Common questions about Pramana's proof-grounded approach.</p>
+        </div>
+
+        <div class="accordion figma-accordion" id="pramanaFaq">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faq-heading-1">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-1" aria-expanded="true" aria-controls="faq-collapse-1">
+                Do I need to know advanced math to learn with Pramana?
+              </button>
+            </h2>
+            <div id="faq-collapse-1" class="accordion-collapse collapse show" aria-labelledby="faq-heading-1" data-bs-parent="#pramanaFaq">
+              <div class="accordion-body">
+                Not at all. Pramana uses plain, intuitive explanations and concrete visual trace tables. Instead of abstract formulas, you watch variables change one step at a time.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faq-heading-2">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-2" aria-expanded="false" aria-controls="faq-collapse-2">
+                How does Pramana prove its explanations?
+              </button>
+            </h2>
+            <div id="faq-collapse-2" class="accordion-collapse collapse" aria-labelledby="faq-heading-2" data-bs-parent="#pramanaFaq">
+              <div class="accordion-body">
+                Pramana uses a dual-verification system: (1) Retrieval-Augmented Generation (RAG) queries a local FAISS vector store of official documentation (such as <code>trees.pdf</code>) to ground answers in verified texts, and (2) Python AST static analysis validates syntax and rules without running arbitrary code.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faq-heading-3">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-3" aria-expanded="false" aria-controls="faq-collapse-3">
+                Can I upload my own class notes and textbooks?
+              </button>
+            </h2>
+            <div id="faq-collapse-3" class="accordion-collapse collapse" aria-labelledby="faq-heading-3" data-bs-parent="#pramanaFaq">
+              <div class="accordion-body">
+                Yes! Under the Evidence Docs tab, you can drag and drop any PDF or TXT file. Pramana chunks the text, computes embeddings with <code>gemini-embedding-001</code>, and indexes it into FAISS.
+              </div>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="faq-heading-4">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-4" aria-expanded="false" aria-controls="faq-collapse-4">
+                What programming languages are supported?
+              </button>
+            </h2>
+            <div id="faq-collapse-4" class="accordion-collapse collapse" aria-labelledby="faq-heading-4" data-bs-parent="#pramanaFaq">
+              <div class="accordion-body">
+                Pramana natively supports Python, C++, JavaScript, Java, and Go, with specialized static AST analysis for Python and C/C++ boundary checks.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRE-FOOTER CTA BANNER: "Don't just learn it. Make it yours." -->
+      <div class="figma-cta-banner">
+        <div class="cta-seal-badge">
+          <i class="bi bi-patch-check-fill text-warning"></i> 100% Verified Proof Grounding
+        </div>
+        <h2 class="cta-headline">Don't just learn it. Make it yours.</h2>
+        <p class="cta-subtext">
+          Step into a programming tutor that values factual precision, mathematical accuracy, and transparent proof.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <button class="btn btn-figma-primary" data-switch-tab="learn">
+            <i class="bi bi-play-circle-fill"></i> Launch Line Explainer
+          </button>
+          <button class="btn btn-figma-secondary" data-switch-tab="debug">
+            <i class="bi bi-bug"></i> Analyze Bug DNA
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         SECTION 1: LEARN MODE (LINE-BY-LINE EXPLAINER WORKSPACE)
+         ==================================================================== -->
+    <section id="section-learn" class="tab-section d-none">
+      <div class="row g-3">
+        
+        <!-- Left: Code Input & Editor -->
+        <div class="col-lg-5">
+          <div class="pramana-card h-100 d-flex flex-column">
+            
+            <div class="pramana-card-header">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-code-square text-warning fs-5"></i>
+                <span class="fw-bold text-dark">Source Code</span>
+              </div>
+              
+              <div class="d-flex align-items-center gap-2">
+                <label for="learn-language-select" class="visually-hidden">Language</label>
+                <select id="learn-language-select" class="form-select form-select-sm bg-light text-dark border-secondary w-auto">
+                  <option value="python" selected>Python</option>
+                  <option value="cpp">C++</option>
+                  <option value="javascript">JavaScript</option>
+                  <option value="java">Java</option>
+                  <option value="go">Go</option>
+                </select>
+                <button id="btn-learn-explain" class="btn btn-figma-primary btn-sm">
+                  <span id="learn-spinner" class="spinner-pramana d-none me-1"></span>
+                  <i class="bi bi-play-circle-fill"></i> Explain Line-by-Line
+                  <span id="learn-timer" class="badge bg-dark ms-1 d-none font-monospace">0.0s</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="pramana-card-body flex-grow-1 d-flex flex-column p-2">
+              <div class="code-editor-wrapper flex-grow-1" style="min-height: 380px;">
+                <div id="learn-line-numbers" class="line-numbers-col">
+                  <span class="line-num">1</span>
+                </div>
+                <textarea id="learn-code-input" class="code-textarea" spellcheck="false" placeholder="# Paste or write code here to understand it line-by-line...
+unsigned int factorial(unsigned int n) {
+    int res = 1;
+    for (int i = 2; i < n; i++)
+        res *= i;
+    return res;
+}"></textarea>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-2 px-1 text-muted small">
+                <span><i class="bi bi-lightning-charge-fill text-warning me-1"></i> Factual, evidence-backed AI evaluation</span>
+                <span>Click any line to view detailed context</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right: Line-by-Line Interactive Viewer & Explanation -->
+        <div class="col-lg-7">
+          <div class="pramana-card h-100 d-flex flex-column">
+            
+            <div class="pramana-card-header">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-mortarboard-fill text-warning"></i>
+                <span class="fw-bold text-dark">Learn Mode Structured Explanation</span>
+              </div>
+              <span id="learn-duration-badge" class="badge bg-light border border-secondary text-dark font-monospace small"></span>
+            </div>
+
+            <div class="pramana-card-body flex-grow-1 d-flex flex-column" style="max-height: 820px; overflow-y: auto;">
+              
+              <!-- Empty State -->
+              <div id="learn-empty-state" class="text-center my-auto py-5 text-secondary">
+                <div class="mb-3">
+                  <i class="bi bi-lightbulb display-4 text-warning opacity-75"></i>
+                </div>
+                <h5 class="text-dark font-display">Select or enter code, then click "Explain Line-by-Line"</h5>
+                <p class="small text-muted mb-3">Pramana provides factually accurate analysis: purpose, sequential flow, line inspection, execution trace table, and suggested improvements.</p>
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="preset-pill active" data-load-preset="c_bst_insert"><i class="bi bi-file-earmark-pdf-fill me-1 text-danger"></i>BST Insert (trees.pdf)</button>
+                  <button class="preset-pill" data-load-preset="cpp_factorial"><i class="bi bi-bug me-1 text-warning"></i>Try C++ Factorial Bug</button>
+                </div>
+              </div>
+
+              <!-- Results Area -->
+              <div id="learn-results-container" class="d-none d-flex flex-column gap-3">
+                
+                <!-- A. Program Purpose -->
+                <div class="p-3 rounded bg-light border border-light">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-warning text-dark px-2 py-1 small fw-bold">A. Program Purpose</span>
+                  </div>
+                  <p class="text-dark mb-0 fs-6" id="learn-summary-text"></p>
+                </div>
+
+                <!-- B. How It Works (Execution Flow) -->
+                <div class="p-3 rounded bg-light border border-light">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-secondary text-white px-2 py-1 small fw-bold">B. How It Works (Execution Flow)</span>
+                  </div>
+                  <div id="learn-flow-steps"></div>
+                </div>
+
+                <!-- C. Line-by-Line Explanation -->
+                <div class="p-3 rounded bg-light border border-light">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-info text-dark px-2 py-1 small fw-bold">C. Line-by-Line Code Inspector</span>
+                    <span class="text-muted small"><i class="bi bi-cursor-fill me-1"></i>Click any line row to inspect</span>
+                  </div>
+                  <div id="learn-interactive-lines" class="interactive-code-viewer mb-2"></div>
+                  <div id="learn-line-detail" class="line-inspector-detail">
+                    <span class="text-muted small">Click any line above to view its exact statement role, surrounding links, and risk analysis.</span>
+                  </div>
+                </div>
+
+                <!-- D. Output & Execution Trace -->
+                <div class="p-3 rounded bg-light border border-light" id="learn-trace-container">
+                  <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                    <span class="badge bg-warning text-dark px-2 py-1 small fw-bold">D. Output &amp; Execution Trace</span>
+                    <div class="d-flex gap-2 flex-wrap">
+                      <span class="badge bg-white border border-secondary text-dark">Input: <span id="learn-trace-input" class="text-primary font-monospace">-</span></span>
+                      <span class="badge bg-white border border-secondary text-dark">Actual Output: <span id="learn-trace-actual" class="text-warning font-monospace">-</span></span>
+                      <span class="badge bg-white border border-secondary text-dark">Expected: <span id="learn-trace-expected" class="text-success font-monospace">-</span></span>
+                    </div>
+                  </div>
+                  
+                  <div class="trace-table-container mb-2 bg-white rounded border border-light overflow-hidden">
+                    <table class="trace-table">
+                      <thead>
+                        <tr>
+                          <th style="width: 25%;">Step / Iteration</th>
+                          <th>Variables &amp; Evaluation State</th>
+                        </tr>
+                      </thead>
+                      <tbody id="learn-trace-table-body"></tbody>
+                    </table>
+                  </div>
+
+                  <div id="learn-trace-discrepancy" class="discrepancy-callout d-none"></div>
+                </div>
+
+                <!-- E. Important Concepts -->
+                <div class="p-3 rounded bg-light border border-light" id="learn-concepts-container">
+                  <span class="badge px-2 py-1 small fw-bold mb-2 d-inline-block text-white" style="background-color: #8b5cf6;">E. Important Concepts</span>
+                  <div id="learn-concepts-list" class="row g-2"></div>
+                </div>
+
+                <!-- Evidence Grounding Panel (Real FAISS RAG) -->
+                <div class="p-3 rounded bg-light border border-light" id="learn-evidence-container">
+                  <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                    <span class="badge bg-white border border-warning text-dark px-2 py-1 small fw-bold">
+                      <i class="bi bi-journal-bookmark-fill text-warning me-1"></i>Evidence Trail &amp; Document Grounding
+                    </span>
+                    <span id="learn-evidence-status-pill" class="badge bg-white border border-secondary text-secondary small">FAISS Vector Search</span>
+                  </div>
+                  <div id="learn-evidence-banner" class="alert alert-secondary py-2 small mb-2">
+                    <i class="bi bi-info-circle me-1"></i> Semantic search verifies code against uploaded documentation corpus.
+                  </div>
+                  <div id="learn-evidence-passages-list" class="d-flex flex-column gap-2"></div>
+                </div>
+
+                <!-- F. Suggested Improvement -->
+                <div class="improvement-box d-none" id="learn-improvement-container">
+                  <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                    <span class="badge bg-success px-2 py-1 small fw-bold"><i class="bi bi-wrench-adjustable me-1"></i>F. Suggested Improvement</span>
+                    <span id="learn-improvement-title" class="text-success fw-bold small"></span>
+                  </div>
+                  <p id="learn-improvement-desc" class="text-dark small mb-2"></p>
+                  
+                  <div class="p-2 rounded bg-dark border border-secondary mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                      <span class="text-muted small">Corrected Code:</span>
+                      <button class="btn btn-sm btn-outline-success py-0 px-2" id="btn-copy-learn-fix"><i class="bi bi-clipboard me-1"></i>Copy Fix</button>
+                    </div>
+                    <pre id="learn-improvement-code" class="m-0 text-success font-monospace small" style="white-space: pre-wrap;"></pre>
+                  </div>
+                  
+                  <div id="learn-improvement-change" class="text-secondary small"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: DEBUG MODE (BUG DNA & FIX CONFIDENCE WORKSPACE)
+         ==================================================================== -->
+    <section id="section-debug" class="tab-section d-none">
+      <div class="row g-3">
+        
+        <!-- Left: Code Input & Problem Description -->
+        <div class="col-lg-5">
+          <div class="pramana-card mb-3">
+            <div class="pramana-card-header">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-bug-fill text-danger fs-5"></i>
+                <span class="fw-bold text-dark">Buggy Code Submission</span>
+              </div>
+              <select id="debug-language-select" class="form-select form-select-sm bg-light text-dark border-secondary w-auto">
+                <option value="python" selected>Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+              </select>
+            </div>
+            
+            <div class="pramana-card-body p-2">
+              <div class="code-editor-wrapper" style="min-height: 250px;">
+                <div id="debug-line-numbers" class="line-numbers-col">
+                  <span class="line-num">1</span>
+                </div>
+                <textarea id="debug-code-input" class="code-textarea" spellcheck="false" placeholder="# Paste broken code here...
+def calculate_total(prices):
+    total = 0
+    for i in range(len(prices) + 1):
+        total += prices[i]
+    return total
+
+print(calculate_total([10, 20, 30]))"></textarea>
+              </div>
+
+              <div class="mt-2">
+                <label for="debug-problem-desc" class="form-label text-muted small mb-1">
+                  <i class="bi bi-chat-left-dots me-1"></i> Problem Description or Error Message (Optional):
+                </label>
+                <input type="text" id="debug-problem-desc" class="form-control form-control-sm bg-light text-dark border-secondary" placeholder="e.g. IndexError: list index out of range on line 4">
+              </div>
+
+              <div class="d-grid mt-3">
+                <button id="btn-debug-analyze" class="btn btn-figma-primary">
+                  <span id="debug-spinner" class="spinner-pramana d-none me-1"></span>
+                  <i class="bi bi-search"></i> Run Bug DNA Analysis
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="pramana-card p-3">
+            <span class="text-muted small fw-bold d-block mb-2">Instant Test Scenarios:</span>
+            <div class="d-flex flex-column gap-2">
+              <button class="preset-pill text-start" data-load-preset="off_by_one">
+                <strong class="text-dark">Off-by-One Loop Error:</strong> <span class="text-muted small">IndexError in accumulator</span>
+              </button>
+              <button class="preset-pill text-start" data-load-preset="mutable_default">
+                <strong class="text-dark">Mutable Default Trap:</strong> <span class="text-muted small">List parameter state leak</span>
+              </button>
+              <button class="preset-pill text-start" data-load-preset="type_mismatch">
+                <strong class="text-dark">Type Error:</strong> <span class="text-muted small">Un-cast string &amp; int concatenation</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Bug DNA Report, Diff Comparison, Fix Confidence, and Evidence Trail -->
+        <div class="col-lg-7">
+          <div class="pramana-card">
+            
+            <div class="pramana-card-header">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-activity text-info fs-5"></i>
+                <span class="fw-bold text-dark">Bug DNA Diagnosis &amp; Proof</span>
+              </div>
+              <div id="verification-status-badge" class="verification-badge unverified">
+                <i class="bi bi-shield"></i> AWAITING ANALYSIS
+              </div>
+            </div>
+
+            <div class="pramana-card-body">
+              
+              <!-- Empty State -->
+              <div id="debug-empty-state" class="text-center py-5 text-secondary">
+                <i class="bi bi-shield-shaded display-4 text-warning opacity-75 mb-3 d-block"></i>
+                <h5 class="text-dark font-display">Submit code to view root cause, minimal fix, and documentation proof</h5>
+                <p class="small text-muted">Pramana will cross-reference your bug against uploaded documentation via RAG semantic search, perform safe static AST verification, and produce a tested diff.</p>
+              </div>
+
+              <!-- Results Area -->
+              <div id="debug-results-container" class="d-none">
+                
+                <!-- Root Cause vs Visible Symptom Grid -->
+                <div class="row g-2 mb-3">
+                  <div class="col-md-6">
+                    <div class="p-3 rounded bg-light border border-light h-100">
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="badge bg-danger small">Root Cause</span>
+                        <span id="dna-error-type" class="badge bg-white border border-secondary text-warning small">Error Type</span>
+                      </div>
+                      <div id="dna-root-cause" class="text-dark fw-bold small mb-1">Root cause text</div>
+                      <div id="dna-why-occurs" class="text-secondary small">Why it occurs</div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="p-3 rounded bg-light border border-light h-100">
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="badge bg-warning text-dark small">Visible Symptom</span>
+                        <span id="dna-affected-line" class="badge bg-white border border-secondary text-info small">Affected Line</span>
+                      </div>
+                      <div id="dna-visible-symptom" class="text-dark small mb-1">Visible symptom</div>
+                      <div id="dna-likely-impact" class="text-secondary small">Likely impact</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Fix Confidence Check -->
+                <div class="p-3 mb-3 rounded bg-light border border-light">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark small"><i class="bi bi-shield-check text-success me-1"></i> Fix Confidence Static Verification</span>
+                    <span class="text-muted small">Server-side Safe Static Analysis</span>
+                  </div>
+                  <p id="verification-verdict-text" class="text-secondary small mb-2"></p>
+                  
+                  <div id="verification-checks-list" class="mb-2"></div>
+
+                  <div class="alert alert-light py-2 px-3 mb-0 small text-muted border border-light">
+                    <i class="bi bi-info-circle me-1"></i> <span id="verification-disclaimer">Static AST checks validate syntax without execution. Runtime behavior is not certified without automated test runs.</span>
+                  </div>
+                </div>
+
+                <!-- Side-by-Side Diff Comparison -->
+                <div class="mb-3">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong class="text-dark small"><i class="bi bi-arrow-left-right me-1"></i> Original vs. Corrected Code:</strong>
+                    <span id="dna-change-summary" class="badge bg-white border border-secondary text-dark small">Change Summary</span>
+                  </div>
+                  
+                  <div class="diff-container">
+                    <div class="diff-box">
+                      <div class="diff-box-header original">
+                        <span>Original Code</span>
+                        <i class="bi bi-dash-circle"></i>
+                      </div>
+                      <pre id="diff-original-code"></pre>
+                    </div>
+
+                    <div class="diff-box">
+                      <div class="diff-box-header corrected">
+                        <span>Suggested Correction</span>
+                        <i class="bi bi-check-circle"></i>
+                      </div>
+                      <pre id="diff-corrected-code"></pre>
+                    </div>
+                  </div>
+
+                  <div class="p-2 mt-2 rounded bg-light border border-light">
+                    <strong class="text-success small"><i class="bi bi-lightbulb me-1"></i> Fix Explanation:</strong>
+                    <p id="dna-beginner-explanation" class="text-dark small mb-0 mt-1"></p>
+                  </div>
+                </div>
+
+                <!-- Evidence Trail Panel -->
+                <div class="p-3 rounded bg-light border border-light">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold text-dark small"><i class="bi bi-journal-bookmark-fill text-warning me-1"></i> Evidence Trail &amp; Documentation Grounding</span>
+                    <span class="badge bg-white border border-secondary text-dark small">FAISS Vector Search</span>
+                  </div>
+
+                  <div id="evidence-status-banner"></div>
+                  <div id="evidence-passages-list"></div>
+                  <div id="evidence-claims-breakdown" class="mt-2"></div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 3: GAME ARENA WORKSPACE
+         ==================================================================== -->
+    <section id="section-game" class="tab-section d-none">
+      
+      <!-- Top: Game Selector Tabs -->
+      <div class="row g-3 mb-3">
+        <div class="col-md-4">
+          <div class="game-selector-tab active" data-game-type="game_a">
+            <i class="bi bi-wrench-adjustable display-6 text-warning mb-2 d-block"></i>
+            <h6 class="fw-bold mb-1">GAME A: Fix The Bug</h6>
+            <p class="text-secondary small mb-0">Spot the broken statement and apply the correct minimal fix.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="game-selector-tab" data-game-type="game_b">
+            <i class="bi bi-crosshair display-6 text-primary mb-2 d-block"></i>
+            <h6 class="fw-bold mb-1">GAME B: Find The Error</h6>
+            <p class="text-secondary small mb-0">Scan the snippet and identify the exact failing line or expression.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="game-selector-tab" data-game-type="game_c">
+            <i class="bi bi-lightbulb display-6 text-success mb-2 d-block"></i>
+            <h6 class="fw-bold mb-1">GAME C: Explain The Code</h6>
+            <p class="text-secondary small mb-0">Trace execution step-by-step and predict output or purpose.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Game Arena -->
+      <div class="row g-3">
+        
+        <!-- Left: Challenges Filter & List -->
+        <div class="col-lg-4">
+          <div class="pramana-card h-100">
+            <div class="pramana-card-header">
+              <span class="fw-bold text-dark small"><i class="bi bi-list-task me-1"></i> Challenges</span>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-secondary active" data-difficulty="all">All</button>
+                <button class="btn btn-outline-secondary" data-difficulty="beginner">Beg</button>
+                <button class="btn btn-outline-secondary" data-difficulty="intermediate">Int</button>
+                <button class="btn btn-outline-secondary" data-difficulty="advanced">Adv</button>
+              </div>
+            </div>
+
+            <div class="pramana-card-body p-2" id="game-challenges-list">
+              <div class="text-center py-4 text-muted small">Loading challenges...</div>
+            </div>
+
+            <div class="p-2 border-top border-light text-center">
+              <button id="btn-reset-game-progress" class="btn btn-sm btn-link text-muted text-decoration-none small">
+                <i class="bi bi-arrow-counterclockwise"></i> Reset Game Progress
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Active Challenge Card -->
+        <div class="col-lg-8" id="game-active-arena">
+          <div class="pramana-card text-center py-5">
+            <p class="text-muted mb-0">Select a challenge from the list on the left to start playing!</p>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ====================================================================
+         SECTION 4: EVIDENCE DOCS (RAG KNOWLEDGE CORPUS WORKSPACE)
+         ==================================================================== -->
+    <section id="section-docs" class="tab-section d-none">
+      <div class="row g-3">
+        
+        <!-- Left: Upload & Test Search -->
+        <div class="col-lg-6">
+          <div class="pramana-card mb-3">
+            <div class="pramana-card-header">
+              <span class="fw-bold text-dark"><i class="bi bi-cloud-arrow-up-fill text-warning me-2"></i> Document Ingestion Pipeline</span>
+              <span class="badge bg-light border border-secondary text-dark small">PDF &amp; TXT Supported</span>
+            </div>
+
+            <div class="pramana-card-body">
+              <p class="text-secondary small mb-3">
+                Upload official programming specifications, language docs, or textbooks. Pramana parses pages via <code>pypdf</code>, splits them into overlapping chunks, generates embeddings using Gemini, and indexes them in <strong>FAISS</strong> for semantic evidence retrieval.
+              </p>
+
+              <!-- Drag and Drop Zone -->
+              <div id="rag-dropzone" class="file-dropzone mb-3 bg-light border border-dashed rounded p-4 text-center">
+                <i class="bi bi-file-earmark-arrow-up display-4 text-warning mb-2 d-block"></i>
+                <div class="fw-bold text-dark">Drag and drop PDF or TXT documentation here</div>
+                <div class="text-muted small mb-3">Max file size: 15MB</div>
+                <button id="btn-trigger-upload" class="btn btn-figma-primary btn-sm">
+                  <i class="bi bi-folder2-open"></i> Browse Files
+                </button>
+                <input type="file" id="rag-file-input" accept=".pdf,.txt,.md,.py,.js,.rst" class="d-none">
+              </div>
+
+              <div id="rag-upload-status" class="d-none"></div>
+
+              <div class="p-3 rounded bg-light border border-light mt-3">
+                <strong class="text-dark small d-block mb-1"><i class="bi bi-folder-check text-success me-1"></i> Included Sample Documentation:</strong>
+                <p class="text-muted small mb-2">Check the <code>sample_docs/</code> folder in the project root for pre-made files ready to upload:</p>
+                <ul class="text-secondary small mb-0 ps-3">
+                  <li><code>sample_docs/python_loops_and_indexing.txt</code> (Zero-indexing, range rules)</li>
+                  <li><code>sample_docs/python_functions_and_scope.txt</code> (Mutable defaults, LEGB scope)</li>
+                  <li><code>sample_docs/python_data_structures.txt</code> (KeyError handling, iteration mutation)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Semantic Search Inspector -->
+          <div class="pramana-card">
+            <div class="pramana-card-header">
+              <span class="fw-bold text-dark"><i class="bi bi-search text-warning me-2"></i> Test Semantic Vector Retrieval</span>
+            </div>
+            <div class="pramana-card-body">
+              <div class="input-group mb-2">
+                <label for="rag-test-query-input" class="visually-hidden">Test Query</label>
+                <input type="text" id="rag-test-query-input" class="form-control bg-light text-dark border-secondary" placeholder="e.g. How does range() handle stop bounds in zero-indexed lists?">
+                <button id="btn-test-rag-query" class="btn btn-figma-primary">
+                  <i class="bi bi-arrow-return-left"></i> Search FAISS
+                </button>
+              </div>
+              <div id="rag-query-results" class="mt-3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Indexed Documents Corpus & Vector Store Stats -->
+        <div class="col-lg-6">
+          <div class="pramana-card h-100">
+            <div class="pramana-card-header">
+              <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-database-fill text-warning fs-5"></i>
+                <span class="fw-bold text-dark">Indexed Knowledge Corpus</span>
+              </div>
+              <button id="btn-clear-rag-store" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i> Clear Index
+              </button>
+            </div>
+
+            <div class="pramana-card-body">
+              <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded bg-light border border-light">
+                <div>
+                  <div class="text-muted small">Embedding Vector Model</div>
+                  <strong class="text-dark">{{ embedding_model }}</strong>
+                </div>
+                <div>
+                  <div class="text-muted small">Vector Store Index</div>
+                  <strong class="text-primary">FAISS (IndexFlatIP)</strong>
+                </div>
+              </div>
+
+              <strong class="text-muted small d-block mb-2">Uploaded &amp; Indexed Documents:</strong>
+              <div id="rag-documents-list">
+                <div class="text-muted text-center py-4 small">Loading documents...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Modal for Alerts & API Key Diagnostics -->
+  <div class="modal fade" id="globalModal" tabindex="-1" aria-labelledby="globalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-white shadow-lg">
+        <div class="modal-header">
+          <h5 class="modal-title font-display" id="globalModalLabel">Notice</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="globalModalBody">
+          <!-- Dynamic message -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-figma-primary btn-sm" data-bs-dismiss="modal">Understood</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       FIGMA FOOTER (4 COLUMNS + COPYRIGHT & SYSTEM STATUS)
+       ==================================================================== -->
+  <footer class="figma-footer">
+    <div class="container-fluid px-lg-4">
+      <div class="row g-4">
+        
+        <!-- Col 1: Brand & Sanskrit Vision -->
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <div class="brand-icon" style="width: 30px; height: 30px; font-size: 1rem;">
+              <i class="bi bi-shield-check"></i>
+            </div>
+            <strong class="brand-title fs-5">Pramana</strong>
+          </div>
+          <p class="text-secondary small mb-3">
+            Sanskrit for <em>valid means of knowing and proof</em>. An AI-powered programming tutor that traces execution, diagnoses root causes, and grounds claims in official documentation.
+          </p>
+          <div class="text-muted small">
+            National Web Development Hackathon 2026 &bull; MIT License
+          </div>
+        </div>
+
+        <!-- Col 2: Product Workspaces -->
+        <div class="col-lg-2 col-md-6 col-6">
+          <div class="footer-col-title">Workspaces</div>
+          <ul class="footer-links">
+            <li><a href="#" data-switch-tab="overview">Overview</a></li>
+            <li><a href="#" data-switch-tab="learn">Line Explainer</a></li>
+            <li><a href="#" data-switch-tab="debug">Bug DNA</a></li>
+            <li><a href="#" data-switch-tab="game">Game Arena</a></li>
+            <li><a href="#" data-switch-tab="docs">Evidence Docs</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Architecture & Tech -->
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="footer-col-title">Architecture</div>
+          <ul class="footer-links">
+            <li><span class="text-muted">Gemini 3.8 Flash &bull; Google AI</span></li>
+            <li><span class="text-muted">FAISS &bull; Vector Similarity</span></li>
+            <li><span class="text-muted">gemini-embedding-001</span></li>
+            <li><span class="text-muted">Python AST Static Analysis</span></li>
+            <li><span class="text-muted">Zero Server Code Execution</span></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Quick Presets -->
+        <div class="col-lg-3 col-md-6">
+          <div class="footer-col-title">Quick Presets</div>
+          <ul class="footer-links">
+            <li><a href="#" data-load-preset="c_bst_insert">BST Insert (trees.pdf)</a></li>
+            <li><a href="#" data-load-preset="c_inorder">Inorder Traversal (trees.pdf)</a></li>
+            <li><a href="#" data-load-preset="cpp_factorial">C++ Factorial Bug</a></li>
+            <li><a href="#" data-load-preset="off_by_one">Off-by-One Loop Bug</a></li>
+            <li><a href="#" data-load-preset="mutable_default">Mutable Default Trap</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 Pramana &bull; Designed and engineered for genuine programming mastery.
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <span class="text-success"><i class="bi bi-circle-fill small me-1"></i> AI Engine Active</span>
+          <span>Local Vector Store Loaded</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Pramana App JS -->
+  <script src="{% static 'pramana/js/app.js' %}"></script>
+</body>
+</html>

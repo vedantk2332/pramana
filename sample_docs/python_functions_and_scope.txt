@@ -1,0 +1,28 @@
+# Python Function Parameter Evaluation and Scope Rules
+
+## Section 1: Default Argument Evaluation Time
+Python function default arguments are evaluated exactly once at the point of function definition (when the `def` statement executes in the enclosing module or scope), NOT upon each function invocation.
+
+### The Mutable Default Argument Anti-Pattern:
+When a mutable object (such as a `list []`, `dict {}`, or `set()`) is assigned as a default parameter:
+```python
+def append_item(val, items=[]):
+    items.append(val)
+    return items
+```
+The exact same list object is retained and mutated across every subsequent function call.
+
+### The Canonical Idiom:
+Always use `None` as the sentinel default value and initialize a fresh container inside the function body:
+```python
+def append_item(val, items=None):
+    if items is None:
+        items = []
+    items.append(val)
+    return items
+```
+
+## Section 2: Variable Scope and Closures
+Python resolves names using the LEGB rule: Local -> Enclosing -> Global -> Built-in.
+In nested functions and lambda expressions, variables defined in outer scopes are looked up at evaluation time (late binding).
+To bind a loop index at definition time inside a lambda, provide it as a default parameter: `lambda x, i=i: x * i`.

@@ -1,0 +1,77 @@
+# ==============================================================================
+# Pramana Django Project .gitignore
+# ==============================================================================
+
+# Environment variables & secrets
+.env
+.env.*
+*.env
+!.env.example
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+.Python
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Distribution & packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django runtime, databases & logs
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Collected static files (built dynamically via collectstatic on Vercel)
+staticfiles/
+
+# User uploads and media (keep pre-indexed trees.pdf for RAG demo)
+media/
+data/uploads/*
+!data/uploads/trees.pdf
+
+# FAISS Vector Store: tracked for immediate out-of-the-box RAG deployment
+!data/vector_store/
+!data/vector_store/*
+
+# Large media & local backup archives
+design_reference/
+backup_pre_redesign/
+.gemini/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini

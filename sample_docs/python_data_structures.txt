@@ -1,0 +1,21 @@
+# Python Data Structures, Dictionary Subscripting, and Mutating Loops
+
+## Section 1: Dictionary Key Access and KeyError Handling
+Python dictionary subscripting `dict[key]` requires the specified key to be present. If `key not in dict`, Python raises a `KeyError`.
+
+### Safe Access Patterns:
+1. `dict.get(key, default)` returns the value if the key exists, or the specified `default` (or `None`) without throwing an exception.
+2. `dict.setdefault(key, default)` returns the value or sets and returns the default.
+3. `try ... except KeyError:` block explicitly handles the missing key scenario.
+
+## Section 2: Modifying Collections During Iteration
+Modifying the length of a list (calling `.remove()`, `.append()`, or `del`) while directly iterating over it with a `for item in lst:` loop corrupts the internal iterator index counter.
+When an item is removed, all subsequent elements shift left, causing the iterator to skip the immediate subsequent element.
+
+### Safe Iteration Patterns:
+1. List comprehension filtering: `lst = [x for x in lst if keep_condition(x)]`
+2. Iterate over a slice copy: `for item in lst[:]:`
+
+## Section 3: Generator Expressions vs List Comprehensions
+Generator expressions `(expr for x in iterable)` evaluate lazily on-demand via the iterator protocol (`__next__`), using constant $O(1)$ memory.
+List comprehensions `[expr for x in iterable]` build the complete array in memory immediately ($O(N)$ memory).

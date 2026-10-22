@@ -1,0 +1,23 @@
+# Python Indexing, Sequences, and Loop Bounds Specification
+
+## Section 1: Zero-Based Sequence Indexing
+In Python, all sequence types (strings, lists, tuples, bytearrays) utilize zero-based indexing.
+For a sequence `S` with length `N = len(S)`:
+- The first element is positioned at index `0`.
+- The final valid forward element is positioned at index `N - 1`.
+- Negative indices count backwards from the end: `S[-1]` accesses the final element, and `S[-N]` accesses the initial element.
+
+Attempting to access an index `i >= N` or `i < -N` raises a fatal `IndexError: list index out of range`.
+
+## Section 2: The range() Built-in Function
+The `range(start, stop[, step])` arithmetic progression generates integers from `start` up to, but NOT including, `stop`:
+- `range(stop)` produces integers from `0` up to `stop - 1`.
+- When iterating over sequence elements by index, writing `range(len(S) + 1)` is an off-by-one error because the loop will attempt to access `S[len(S)]`, which is out of bounds.
+- The canonical index-based iteration is `range(len(S))`.
+- Where indices are not strictly needed, idiomatic Python directly iterates over sequence items: `for item in S:`.
+
+## Section 3: Sequence Slicing Syntax
+Python sequences support extended slicing: `sequence[start:stop:step]`.
+- If `start` is omitted, it defaults to `0` (or `len - 1` if `step` is negative).
+- If `stop` is omitted, it defaults to the end of the sequence.
+- A negative `step` reverses traversal. `sequence[::-1]` yields a reversed copy of the sequence without modifying the original.
