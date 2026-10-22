@@ -11,6 +11,8 @@ import json
 from pathlib import Path
 from django.test import TestCase, Client
 from django.urls import reverse
+from unittest.mock import patch
+
 
 from pramana.services.verification_service import verify_code, verify_python_ast, check_balanced_delimiters
 from pramana.services.rag_service import chunk_text, extract_text_from_file
@@ -439,6 +441,19 @@ class LearnModeAccuracyAndSpeedTests(TestCase):
         client2, _, _ = get_gemini_client()
         if client1 is not None and client2 is not None:
             self.assertIs(client1, client2)
+
+    def test_get_api_key_diagnostic_without_env_file(self):
+        """Verifies that in production (where .env is not deployed), GEMINI_API_KEY from os.environ is correctly recognized."""
+        from pramana.services.config import get_api_key_diagnostic
+        with patch('pramana.services.config.get_env_file_path') as mock_path, \
+             patch.dict('os.environ', {'GEMINI_API_KEY': 'AIzaSyTestVercelKey1234567890'}, clear=False):
+            mock_path.return_value.exists.return_value = False
+            diag = get_api_key_diagnostic()
+            self.assertTrue(diag['has_api_key'])
+            self.assertFalse(diag['env_file_exists'])
+            self.assertFalse(diag['is_placeholder'])
+            self.assertEqual(diag['key_length'], len('AIzaSyTestVercelKey1234567890'))
+
 
 
 class RAGIntegrationAndPersistenceTests(TestCase):

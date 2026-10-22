@@ -26,18 +26,25 @@ def get_env_file_path() -> Path:
 def get_gemini_api_key(force_reload: bool = False) -> str:
     """
     Safely retrieves the GEMINI_API_KEY.
-    If the key is missing from memory or force_reload is True, reloads the root .env file.
+    1. Checks system environment variables (os.environ, e.g. Vercel, Docker).
+    2. Checks Django settings.
+    3. If not found or empty and .env exists, attempts to load from the root .env file.
     Guarantees no stale cached empty values across requests.
     """
-    key = os.getenv('GEMINI_API_KEY', '').strip()
     placeholder = 'your_gemini_api_key_here'
+    key = os.getenv('GEMINI_API_KEY', '').strip().strip('"').strip("'")
+
+    if not key and hasattr(settings, 'GEMINI_API_KEY'):
+        setting_val = getattr(settings, 'GEMINI_API_KEY', '')
+        if isinstance(setting_val, str):
+            key = setting_val.strip().strip('"').strip("'")
 
     # If key is empty or is placeholder, or reload requested, attempt fresh load from .env
     if not key or key == placeholder or force_reload:
         env_path = get_env_file_path()
-        if env_path.exists() and load_dotenv:
+        if env_path and env_path.exists() and load_dotenv:
             load_dotenv(env_path, override=True)
-            key = os.getenv('GEMINI_API_KEY', '').strip()
+            key = os.getenv('GEMINI_API_KEY', '').strip().strip('"').strip("'")
 
     if not key or key == placeholder:
         return ''
@@ -50,19 +57,17 @@ def get_api_key_diagnostic() -> Dict[str, Any]:
     SECURITY: Reports only presence, length, and file existence. NEVER reveals key contents.
     """
     env_path = get_env_file_path()
-    raw_env_key = ''
-    if env_path.exists() and load_dotenv:
-        load_dotenv(env_path, override=True)
-        raw_env_key = os.getenv('GEMINI_API_KEY', '').strip()
-
-    is_present = bool(raw_env_key and raw_env_key != 'your_gemini_api_key_here')
-    is_placeholder = (raw_env_key == 'your_gemini_api_key_here')
+    key = get_gemini_api_key()
+    raw_env_val = os.getenv('GEMINI_API_KEY', '').strip().strip('"').strip("'")
+    placeholder = 'your_gemini_api_key_here'
+    is_placeholder = (raw_env_val == placeholder)
+    is_present = bool(key and key != placeholder)
 
     return {
-        'env_file_exists': env_path.exists(),
-        'env_file_path': str(env_path),
+        'env_file_exists': env_path.exists() if env_path else False,
+        'env_file_path': str(env_path) if env_path else '',
         'has_api_key': is_present,
-        'key_length': len(raw_env_key) if is_present else 0,
+        'key_length': len(key) if is_present else 0,
         'is_placeholder': is_placeholder,
     }
 
